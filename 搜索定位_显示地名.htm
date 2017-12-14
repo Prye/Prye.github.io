@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="GBK">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>搜索定位</title>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    <style>
+        input[type="text"] {
+            height: 25px;
+            outline: none;
+            border: 0;
+            border: 1px solid #CCCCCC;
+            padding: 0 4px;
+        }
+    </style>
+    <script src="http://webapi.amap.com/maps?v=1.4.2&key=810cefe985503bfb2b113687c745ca31"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+</head>
+<body>
+<div id="container"></div>
+<div class="button-group">
+    <input id="cityName" class="inputtext" placeholder="请输入城市的名称" type="text"/>
+    <input id="query" class="button" value="到指定的城市" type="button"/>
+</div>
+<div id="tip">可以移动地图，得到城市的信息哦！<br><span id="info"></span></div>
+<script>
+    var map = new AMap.Map('container', {
+        resizeEnable: true
+    });
+    //设置城市
+    AMap.event.addDomListener(document.getElementById('query'), 'click', function() {
+        var cityName = document.getElementById('cityName').value;
+        if (!cityName) {
+            cityName = '北京市';
+        }
+        map.setCity(cityName);
+    });
+     map.on('moveend', getCity);
+    function getCity() {
+        map.getCity(function(data) {
+            if (data['province'] && typeof data['province'] === 'string') {
+                document.getElementById('info').innerHTML = '城市：' + (data['city'] || data['province']);
+            }
+        });
+    }
+</script>
+</body>
+</html>
